@@ -24,8 +24,8 @@ export function Gallery() {
     offset: ["start end", "end start"],
   });
 
-  const y1 = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
-  const y2 = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
+  const y1 = useTransform(scrollYProgress, [0, 1], ["0%", "-5%"]);
+  const y2 = useTransform(scrollYProgress, [0, 1], ["0%", "5%"]);
 
   const navigateImage = (direction: "prev" | "next") => {
     if (selectedImage === null) return;
@@ -54,56 +54,115 @@ export function Gallery() {
           </p>
         </motion.div>
 
-        {/* Gallery Grid with Parallax */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {galleryImages.map((image, index) => (
-            <motion.div
-              key={image.id}
-              style={{ y: index % 2 === 0 ? y1 : y2 }}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ 
-                duration: 0.6, 
-                delay: index * 0.1,
-                ease: "easeOut"
-              }}
-              whileHover={{ scale: 1.03 }}
-              className="group relative aspect-[4/3] rounded-xl overflow-hidden cursor-pointer border border-border bg-muted"
-              onClick={() => setSelectedImage(index)}
-            >
-              {/* Image Placeholder */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <motion.div 
-                  className="text-center"
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <ZoomIn className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
-                  <p className="text-sm font-medium text-muted-foreground">
-                    {image.src}
-                  </p>
-                </motion.div>
-              </div>
-
-              {/* Hover Overlay */}
-              <motion.div 
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                className="absolute inset-0 bg-foreground/60 flex items-center justify-center transition-opacity duration-300"
+        {/* Gallery Grid - Masonry Style */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+          {/* Column 1 */}
+          <motion.div style={{ y: y1 }} className="space-y-4 md:space-y-6">
+            {[galleryImages[0], galleryImages[3]].map((image, index) => (
+              <motion.div
+                key={image.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+                className={`group relative rounded-xl overflow-hidden cursor-pointer border border-border bg-muted ${
+                  index === 0 ? "aspect-[4/5]" : "aspect-square"
+                }`}
+                onClick={() => setSelectedImage(galleryImages.indexOf(image))}
               >
-                <div className="text-center">
-                  <motion.div 
-                    initial={{ scale: 0 }}
-                    whileHover={{ scale: 1 }}
-                    className="w-10 h-10 mx-auto rounded-full bg-background/20 flex items-center justify-center mb-2"
-                  >
-                    <ZoomIn className="w-5 h-5 text-background" />
-                  </motion.div>
-                  <p className="text-background text-sm font-medium">{image.alt}</p>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <ZoomIn className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
+                    <p className="text-sm font-medium text-muted-foreground">{image.src}</p>
+                  </div>
                 </div>
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                  className="absolute inset-0 bg-foreground/60 flex items-center justify-center"
+                >
+                  <div className="text-center">
+                    <div className="w-10 h-10 mx-auto rounded-full bg-background/20 flex items-center justify-center mb-2">
+                      <ZoomIn className="w-5 h-5 text-background" />
+                    </div>
+                    <p className="text-background text-sm font-medium">{image.alt}</p>
+                  </div>
+                </motion.div>
               </motion.div>
-            </motion.div>
-          ))}
+            ))}
+          </motion.div>
+
+          {/* Column 2 */}
+          <motion.div style={{ y: y2 }} className="space-y-4 md:space-y-6 pt-8 md:pt-12">
+            {[galleryImages[1], galleryImages[4]].map((image, index) => (
+              <motion.div
+                key={image.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+                className={`group relative rounded-xl overflow-hidden cursor-pointer border border-border bg-muted ${
+                  index === 0 ? "aspect-square" : "aspect-[4/5]"
+                }`}
+                onClick={() => setSelectedImage(galleryImages.indexOf(image))}
+              >
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <ZoomIn className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
+                    <p className="text-sm font-medium text-muted-foreground">{image.src}</p>
+                  </div>
+                </div>
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                  className="absolute inset-0 bg-foreground/60 flex items-center justify-center"
+                >
+                  <div className="text-center">
+                    <div className="w-10 h-10 mx-auto rounded-full bg-background/20 flex items-center justify-center mb-2">
+                      <ZoomIn className="w-5 h-5 text-background" />
+                    </div>
+                    <p className="text-background text-sm font-medium">{image.alt}</p>
+                  </div>
+                </motion.div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Column 3 */}
+          <motion.div style={{ y: y1 }} className="space-y-4 md:space-y-6 hidden md:block">
+            {[galleryImages[2], galleryImages[5]].map((image, index) => (
+              <motion.div
+                key={image.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+                className={`group relative rounded-xl overflow-hidden cursor-pointer border border-border bg-muted ${
+                  index === 0 ? "aspect-[4/5]" : "aspect-square"
+                }`}
+                onClick={() => setSelectedImage(galleryImages.indexOf(image))}
+              >
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <ZoomIn className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
+                    <p className="text-sm font-medium text-muted-foreground">{image.src}</p>
+                  </div>
+                </div>
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                  className="absolute inset-0 bg-foreground/60 flex items-center justify-center"
+                >
+                  <div className="text-center">
+                    <div className="w-10 h-10 mx-auto rounded-full bg-background/20 flex items-center justify-center mb-2">
+                      <ZoomIn className="w-5 h-5 text-background" />
+                    </div>
+                    <p className="text-background text-sm font-medium">{image.alt}</p>
+                  </div>
+                </motion.div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
 
         {/* Lightbox Dialog */}
