@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { ZoomIn, X, ChevronLeft, ChevronRight } from "lucide-react";
@@ -18,6 +18,15 @@ export function Gallery() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
 
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const y1 = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
+  const y2 = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
+
   const navigateImage = (direction: "prev" | "next") => {
     if (selectedImage === null) return;
     const newIndex =
@@ -28,13 +37,13 @@ export function Gallery() {
   };
 
   return (
-    <section id="gallery" className="section-padding" ref={ref}>
-      <div className="container mx-auto">
+    <section id="gallery" className="section-padding overflow-hidden" ref={containerRef}>
+      <div className="container mx-auto" ref={ref}>
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
           className="text-center max-w-2xl mx-auto mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
@@ -45,36 +54,54 @@ export function Gallery() {
           </p>
         </motion.div>
 
-        {/* Gallery Grid */}
+        {/* Gallery Grid with Parallax */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {galleryImages.map((image, index) => (
             <motion.div
               key={image.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
+              style={{ y: index % 2 === 0 ? y1 : y2 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={isInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ 
+                duration: 0.6, 
+                delay: index * 0.1,
+                ease: "easeOut"
+              }}
+              whileHover={{ scale: 1.03 }}
               className="group relative aspect-[4/3] rounded-xl overflow-hidden cursor-pointer border border-border bg-muted"
               onClick={() => setSelectedImage(index)}
             >
               {/* Image Placeholder */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
+                <motion.div 
+                  className="text-center"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.3 }}
+                >
                   <ZoomIn className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
                   <p className="text-sm font-medium text-muted-foreground">
                     {image.src}
                   </p>
-                </div>
+                </motion.div>
               </div>
 
               {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <motion.div 
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+                className="absolute inset-0 bg-foreground/60 flex items-center justify-center transition-opacity duration-300"
+              >
                 <div className="text-center">
-                  <div className="w-10 h-10 mx-auto rounded-full bg-background/20 flex items-center justify-center mb-2">
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    whileHover={{ scale: 1 }}
+                    className="w-10 h-10 mx-auto rounded-full bg-background/20 flex items-center justify-center mb-2"
+                  >
                     <ZoomIn className="w-5 h-5 text-background" />
-                  </div>
+                  </motion.div>
                   <p className="text-background text-sm font-medium">{image.alt}</p>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           ))}
         </div>
@@ -85,7 +112,12 @@ export function Gallery() {
           onOpenChange={() => setSelectedImage(null)}
         >
           <DialogContent className="max-w-4xl p-0 bg-transparent border-0">
-            <div className="relative">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="relative"
+            >
               <button
                 onClick={() => setSelectedImage(null)}
                 className="absolute -top-12 right-0 p-2 text-background hover:text-primary transition-colors"
@@ -107,19 +139,23 @@ export function Gallery() {
                 )}
               </div>
 
-              <button
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => navigateImage("prev")}
                 className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/80 flex items-center justify-center hover:bg-background transition-colors"
               >
                 <ChevronLeft className="w-5 h-5 text-foreground" />
-              </button>
-              <button
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => navigateImage("next")}
                 className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/80 flex items-center justify-center hover:bg-background transition-colors"
               >
                 <ChevronRight className="w-5 h-5 text-foreground" />
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
           </DialogContent>
         </Dialog>
       </div>

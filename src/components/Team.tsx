@@ -34,18 +34,32 @@ const teamMembers = [
   },
 ];
 
+const cardVariants = {
+  initial: { opacity: 0, y: 60, rotateX: -15 },
+  animate: (index: number) => ({
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    transition: {
+      duration: 0.6,
+      delay: index * 0.15,
+      ease: [0, 0, 0.2, 1] as const,
+    },
+  }),
+};
+
 export function Team() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="team" className="section-padding bg-muted/30" ref={ref}>
+    <section id="team" className="section-padding bg-muted/30 overflow-hidden" ref={ref}>
       <div className="container mx-auto">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
           className="text-center max-w-2xl mx-auto mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
@@ -58,61 +72,85 @@ export function Team() {
         </motion.div>
 
         {/* Team Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" style={{ perspective: "1000px" }}>
           {teamMembers.map((member, index) => (
             <motion.div
               key={member.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
+              custom={index}
+              variants={cardVariants}
+              initial="initial"
+              animate={isInView ? "animate" : "initial"}
+              whileHover={{ 
+                y: -10,
+                transition: { duration: 0.3 }
+              }}
               className="group"
             >
-              <div className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-md transition-all duration-300">
+              <div className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300">
                 {/* Image Placeholder */}
-                <div className="relative aspect-square bg-muted flex items-center justify-center">
-                  <div className="text-center">
+                <div className="relative aspect-square bg-muted flex items-center justify-center overflow-hidden">
+                  <motion.div 
+                    className="text-center"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.3 }}
+                  >
                     <div className="w-16 h-16 mx-auto mb-2 rounded-full bg-background flex items-center justify-center">
                       <User className="w-8 h-8 text-muted-foreground" />
                     </div>
                     <p className="text-xs text-muted-foreground">{member.image}</p>
-                  </div>
+                  </motion.div>
 
                   {/* Social Links Overlay */}
-                  <div className="absolute inset-0 bg-foreground/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                    className="absolute inset-0 bg-foreground/70 flex items-center justify-center"
+                  >
                     <div className="flex gap-2">
                       {member.social.linkedin && (
-                        <a
+                        <motion.a
                           href={member.social.linkedin}
+                          whileHover={{ scale: 1.2, rotate: 5 }}
+                          whileTap={{ scale: 0.95 }}
                           className="w-9 h-9 rounded-full bg-background/20 flex items-center justify-center hover:bg-primary transition-colors"
                         >
                           <Linkedin className="w-4 h-4 text-background" />
-                        </a>
+                        </motion.a>
                       )}
                       {member.social.twitter && (
-                        <a
+                        <motion.a
                           href={member.social.twitter}
+                          whileHover={{ scale: 1.2, rotate: -5 }}
+                          whileTap={{ scale: 0.95 }}
                           className="w-9 h-9 rounded-full bg-background/20 flex items-center justify-center hover:bg-secondary transition-colors"
                         >
                           <Twitter className="w-4 h-4 text-background" />
-                        </a>
+                        </motion.a>
                       )}
                       {member.social.github && (
-                        <a
+                        <motion.a
                           href={member.social.github}
+                          whileHover={{ scale: 1.2, rotate: 5 }}
+                          whileTap={{ scale: 0.95 }}
                           className="w-9 h-9 rounded-full bg-background/20 flex items-center justify-center hover:bg-muted transition-colors"
                         >
                           <Github className="w-4 h-4 text-background" />
-                        </a>
+                        </motion.a>
                       )}
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
 
                 {/* Member Info */}
                 <div className="p-4 text-center">
-                  <h3 className="font-semibold text-foreground mb-0.5">
+                  <motion.h3 
+                    initial={{ opacity: 0 }}
+                    animate={isInView ? { opacity: 1 } : {}}
+                    transition={{ delay: 0.3 + index * 0.1 }}
+                    className="font-semibold text-foreground mb-0.5"
+                  >
                     {member.name}
-                  </h3>
+                  </motion.h3>
                   <p className="text-primary text-sm font-medium mb-2">
                     {member.role}
                   </p>
