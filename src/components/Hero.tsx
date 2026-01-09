@@ -1,8 +1,39 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Play, ArrowRight, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+
+function HeroImage({ scrollYProgress }: { scrollYProgress: any }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
+
+  return (
+    <motion.div 
+      style={{ y }}
+      className="relative rounded-2xl overflow-hidden bg-muted aspect-[4/3] border border-border"
+    >
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Skeleton className="w-full h-full absolute inset-0" />
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full"
+          />
+        </div>
+      )}
+      {/* Recommended size: 800×500 */}
+      <img 
+        src="/images/hero-dr-zoe.png" 
+        alt="Dr. Zoe AI Doctor"
+        className={`w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={() => setIsLoaded(true)}
+      />
+    </motion.div>
+  );
+}
 
 export function Hero() {
   const ref = useRef(null);
@@ -133,17 +164,7 @@ export function Hero() {
             transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
             className="relative"
           >
-            <motion.div 
-              style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "10%"]) }}
-              className="relative rounded-2xl overflow-hidden bg-muted aspect-[4/3] border border-border"
-            >
-              {/* Recommended size: 800×500 */}
-              <img 
-                src="/images/hero-dr-zoe.png" 
-                alt="Dr. Zoe AI Doctor"
-                className="w-full h-full object-cover"
-              />
-            </motion.div>
+            <HeroImage scrollYProgress={scrollYProgress} />
 
             {/* Floating Cards with enhanced animation */}
             <motion.div
