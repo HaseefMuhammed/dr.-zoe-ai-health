@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import {
@@ -57,27 +57,68 @@ const features = [
   },
 ];
 
+const cardVariants = {
+  initial: { opacity: 0, y: 80 },
+  animate: (index: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      delay: index * 0.1,
+      ease: [0, 0, 0.2, 1] as const,
+    },
+  }),
+};
+
 export function Features() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
 
   return (
-    <section id="features" className="section-padding bg-muted/30" ref={ref}>
-      <div className="container mx-auto">
+    <section id="features" className="section-padding bg-muted/30 overflow-hidden relative" ref={containerRef}>
+      {/* Parallax Background Element */}
+      <motion.div 
+        style={{ y: backgroundY }}
+        className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -z-10"
+      />
+      <motion.div 
+        style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]) }}
+        className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl -z-10"
+      />
+
+      <div className="container mx-auto" ref={ref}>
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
           className="text-center max-w-2xl mx-auto mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="text-3xl md:text-4xl font-bold mb-4 text-foreground"
+          >
             Powerful <span className="text-primary">Features</span>
-          </h2>
-          <p className="text-muted-foreground">
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-muted-foreground"
+          >
             Discover the comprehensive suite of AI-powered healthcare tools
             designed to revolutionize your health management.
-          </p>
+          </motion.p>
         </motion.div>
 
         {/* Feature Cards Grid */}
@@ -85,28 +126,46 @@ export function Features() {
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
+              custom={index}
+              variants={cardVariants}
+              initial="initial"
+              animate={isInView ? "animate" : "initial"}
+              whileHover={{ 
+                y: -8, 
+                transition: { duration: 0.3 } 
+              }}
               className="group"
             >
-              <div className="h-full bg-card border border-border rounded-xl overflow-hidden hover:border-primary/20 hover:shadow-md transition-all duration-300">
+              <div className="h-full bg-card border border-border rounded-xl overflow-hidden hover:border-primary/20 hover:shadow-lg transition-all duration-300">
                 {/* Feature Image Placeholder */}
                 <div className="relative h-40 bg-muted flex items-center justify-center overflow-hidden">
-                  <div className="text-center">
+                  <motion.div 
+                    className="text-center"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.3 }}
+                  >
                     <feature.icon className="w-10 h-10 mx-auto mb-2 text-muted-foreground/50" />
                     <p className="text-xs text-muted-foreground">
                       {feature.image}
                     </p>
-                  </div>
+                  </motion.div>
+                  
+                  {/* Hover gradient overlay */}
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  />
                 </div>
 
                 {/* Feature Content */}
                 <div className="p-5">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <motion.div 
+                      whileHover={{ rotate: 360 }}
+                      transition={{ duration: 0.5 }}
+                      className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center"
+                    >
                       <feature.icon className="w-4 h-4 text-primary" />
-                    </div>
+                    </motion.div>
                     <h3 className="font-semibold text-foreground">
                       {feature.title}
                     </h3>
@@ -117,10 +176,15 @@ export function Features() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="p-0 h-auto text-primary hover:text-primary/80 hover:bg-transparent"
+                    className="p-0 h-auto text-primary hover:text-primary/80 hover:bg-transparent group/btn"
                   >
                     Learn More
-                    <ArrowRight className="ml-1 w-4 h-4" />
+                    <motion.span
+                      className="inline-block ml-1"
+                      whileHover={{ x: 4 }}
+                    >
+                      <ArrowRight className="w-4 h-4" />
+                    </motion.span>
                   </Button>
                 </div>
               </div>
