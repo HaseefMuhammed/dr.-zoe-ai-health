@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Stethoscope } from "lucide-react";
+import { Menu, X, Stethoscope, LogIn, LogOut, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
   { name: "Home", href: "#home" },
@@ -17,6 +19,8 @@ const navLinks = [
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,6 +35,11 @@ export function Navbar() {
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
     setIsMobileMenuOpen(false);
   };
 
@@ -83,12 +92,40 @@ export function Navbar() {
 
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center gap-3">
-            <Button variant="ghost" className="text-muted-foreground">
-              Download Report
-            </Button>
-            <Button className="bg-primary hover:bg-primary/90">
-              Consult Dr. Zoe
-            </Button>
+            {isLoggedIn ? (
+              <>
+                <Button
+                  variant="ghost"
+                  onClick={() => navigate("/download")}
+                  className="text-muted-foreground"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleLogout}
+                  className="border-destructive/30 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="ghost"
+                  onClick={() => navigate("/login")}
+                  className="text-muted-foreground"
+                >
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Login
+                </Button>
+                <Button className="bg-primary hover:bg-primary/90">
+                  Consult Dr. Zoe
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -125,12 +162,46 @@ export function Navbar() {
                 </a>
               ))}
               <div className="flex flex-col gap-2 pt-4 border-t border-border">
-                <Button variant="outline" className="w-full">
-                  Download Report
-                </Button>
-                <Button className="w-full bg-primary">
-                  Consult Dr. Zoe
-                </Button>
+                {isLoggedIn ? (
+                  <>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        navigate("/download");
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Download App
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={handleLogout}
+                      className="w-full"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        navigate("/login");
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full"
+                    >
+                      <LogIn className="w-4 h-4 mr-2" />
+                      Login
+                    </Button>
+                    <Button className="w-full bg-primary">
+                      Consult Dr. Zoe
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>
