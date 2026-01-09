@@ -41,7 +41,7 @@ export function Navbar() {
       transition={{ duration: 0.5 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-background/95 backdrop-blur-md shadow-lg border-b border-border"
+          ? "bg-card/95 backdrop-blur-md shadow-sm border-b border-border"
           : "bg-transparent"
       }`}
     >
@@ -54,14 +54,13 @@ export function Navbar() {
               e.preventDefault();
               scrollToSection("#home");
             }}
-            className="flex items-center gap-2 group"
+            className="flex items-center gap-2.5"
           >
-            <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center">
-              <Stethoscope className="w-6 h-6 text-primary-foreground" />
+            <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
+              <Stethoscope className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold">
-              <span className="text-primary">Dr.</span>{" "}
-              <span className="text-secondary">Zoe</span>
+            <span className="text-xl font-semibold tracking-tight">
+              Dr. Zoe
             </span>
           </a>
 
@@ -75,23 +74,19 @@ export function Navbar() {
                   e.preventDefault();
                   scrollToSection(link.href);
                 }}
-                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors relative group"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
               </a>
             ))}
           </div>
 
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center gap-3">
-            <Button
-              variant="outline"
-              className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground"
-            >
+            <Button variant="ghost" className="text-muted-foreground">
               Download Report
             </Button>
-            <Button className="gradient-bg border-0 hover:opacity-90">
+            <Button className="bg-primary hover:bg-primary/90">
               Consult Dr. Zoe
             </Button>
           </div>
@@ -113,7 +108,7 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-background border-b border-border"
+            className="lg:hidden bg-card border-b border-border"
           >
             <div className="container mx-auto px-4 py-4 space-y-4">
               {navLinks.map((link) => (
@@ -129,14 +124,11 @@ export function Navbar() {
                   {link.name}
                 </a>
               ))}
-              <div className="flex flex-col gap-2 pt-4">
-                <Button
-                  variant="outline"
-                  className="w-full border-secondary text-secondary"
-                >
+              <div className="flex flex-col gap-2 pt-4 border-t border-border">
+                <Button variant="outline" className="w-full">
                   Download Report
                 </Button>
-                <Button className="w-full gradient-bg border-0">
+                <Button className="w-full bg-primary">
                   Consult Dr. Zoe
                 </Button>
               </div>

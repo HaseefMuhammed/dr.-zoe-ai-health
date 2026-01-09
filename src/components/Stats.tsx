@@ -9,28 +9,24 @@ const stats = [
     value: 50000,
     suffix: "+",
     label: "Patients Served",
-    color: "text-primary",
   },
   {
     icon: Stethoscope,
     value: 120000,
     suffix: "+",
     label: "Health Consultations",
-    color: "text-secondary",
   },
   {
     icon: Target,
     value: 99.2,
     suffix: "%",
     label: "Accuracy Rate",
-    color: "text-primary",
   },
   {
     icon: Clock,
     value: 24,
     suffix: "/7",
     label: "Support Hours",
-    color: "text-secondary",
   },
 ];
 
@@ -86,21 +82,21 @@ export function Stats() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section className="py-16 bg-gradient-to-r from-primary/5 via-background to-secondary/5" ref={ref}>
+    <section className="py-16 border-y border-border" ref={ref}>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
               className="text-center"
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 mb-4">
-                <stat.icon className={`w-8 h-8 ${stat.color}`} />
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-muted mb-4">
+                <stat.icon className="w-6 h-6 text-primary" />
               </div>
-              <div className={`text-3xl md:text-4xl font-bold ${stat.color} mb-2`}>
+              <div className="text-3xl md:text-4xl font-bold text-foreground mb-1">
                 <AnimatedCounter
                   value={stat.value}
                   suffix={stat.suffix}

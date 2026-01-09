@@ -1,4 +1,4 @@
-import { Stethoscope, Facebook, Twitter, Instagram, Linkedin, Youtube, Heart } from "lucide-react";
+import { Stethoscope, Facebook, Twitter, Instagram, Linkedin, Youtube } from "lucide-react";
 
 const footerLinks = {
   quickLinks: [
@@ -41,34 +41,30 @@ export function Footer() {
 
   return (
     <footer className="bg-foreground text-background">
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
+      <div className="container mx-auto px-4 py-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <a href="#home" className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center">
-                <Stethoscope className="w-6 h-6 text-primary-foreground" />
+              <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
+                <Stethoscope className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold">
-                <span className="text-primary">Dr.</span>{" "}
-                <span className="text-secondary">Zoe</span>
-              </span>
+              <span className="text-xl font-semibold">Dr. Zoe</span>
             </a>
-            <p className="text-background/70 mb-6 max-w-md">
-              Dr. Zoe is revolutionizing healthcare with AI-powered diagnostics
-              and tele-medical support. Making quality healthcare accessible,
-              fast, and accurate for everyone.
+            <p className="text-background/60 mb-6 text-sm max-w-sm">
+              Revolutionizing healthcare with AI-powered diagnostics and
+              tele-medical support. Making quality healthcare accessible for everyone.
             </p>
             {/* Social Links */}
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
-                  className="w-10 h-10 rounded-full bg-background/10 flex items-center justify-center hover:bg-primary transition-colors"
+                  className="w-9 h-9 rounded-lg bg-background/10 flex items-center justify-center hover:bg-primary transition-colors"
                 >
-                  <social.icon className="w-5 h-5" />
+                  <social.icon className="w-4 h-4" />
                 </a>
               ))}
             </div>
@@ -76,8 +72,8 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
-            <ul className="space-y-3">
+            <h3 className="font-semibold mb-4">Quick Links</h3>
+            <ul className="space-y-2.5">
               {footerLinks.quickLinks.map((link) => (
                 <li key={link.name}>
                   <a
@@ -86,7 +82,7 @@ export function Footer() {
                       e.preventDefault();
                       scrollToSection(link.href);
                     }}
-                    className="text-background/70 hover:text-primary transition-colors"
+                    className="text-background/60 hover:text-primary transition-colors text-sm"
                   >
                     {link.name}
                   </a>
@@ -97,8 +93,8 @@ export function Footer() {
 
           {/* Useful Links */}
           <div>
-            <h3 className="font-semibold text-lg mb-4">Useful Links</h3>
-            <ul className="space-y-3">
+            <h3 className="font-semibold mb-4">Legal</h3>
+            <ul className="space-y-2.5">
               {footerLinks.usefulLinks.map((link) => (
                 <li key={link.name}>
                   <a
@@ -109,7 +105,7 @@ export function Footer() {
                         scrollToSection(link.href);
                       }
                     }}
-                    className="text-background/70 hover:text-primary transition-colors"
+                    className="text-background/60 hover:text-primary transition-colors text-sm"
                   >
                     {link.name}
                   </a>
@@ -120,8 +116,8 @@ export function Footer() {
 
           {/* Services */}
           <div>
-            <h3 className="font-semibold text-lg mb-4">Services</h3>
-            <ul className="space-y-3">
+            <h3 className="font-semibold mb-4">Services</h3>
+            <ul className="space-y-2.5">
               {footerLinks.services.map((link) => (
                 <li key={link.name}>
                   <a
@@ -130,7 +126,7 @@ export function Footer() {
                       e.preventDefault();
                       scrollToSection(link.href);
                     }}
-                    className="text-background/70 hover:text-primary transition-colors"
+                    className="text-background/60 hover:text-primary transition-colors text-sm"
                   >
                     {link.name}
                   </a>
@@ -141,15 +137,10 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-background/10 mt-12 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-background/50 text-sm text-center md:text-left">
-              © {new Date().getFullYear()} Dr. Zoe AI Doctor. All rights reserved.
-            </p>
-            <p className="text-background/50 text-sm flex items-center gap-1">
-              Made with <Heart className="w-4 h-4 text-primary" /> for better healthcare
-            </p>
-          </div>
+        <div className="border-t border-background/10 mt-10 pt-6">
+          <p className="text-background/40 text-sm text-center">
+            © {new Date().getFullYear()} Dr. Zoe AI Doctor. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

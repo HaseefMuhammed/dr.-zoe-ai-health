@@ -28,55 +28,51 @@ export function Gallery() {
   };
 
   return (
-    <section id="gallery" className="section-padding bg-muted/30" ref={ref}>
+    <section id="gallery" className="section-padding" ref={ref}>
       <div className="container mx-auto">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto mb-16"
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-2xl mx-auto mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Our <span className="gradient-text">Gallery</span>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+            Our <span className="text-primary">Gallery</span>
           </h2>
-          <p className="text-lg text-muted-foreground">
-            Explore screenshots and visuals of Dr. Zoe in action. See how our
-            AI-powered healthcare solution transforms the patient experience.
+          <p className="text-muted-foreground">
+            Explore screenshots and visuals of Dr. Zoe in action.
           </p>
         </motion.div>
 
         {/* Gallery Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {galleryImages.map((image, index) => (
             <motion.div
               key={image.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group relative aspect-[4/3] rounded-2xl overflow-hidden cursor-pointer"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+              className="group relative aspect-[4/3] rounded-xl overflow-hidden cursor-pointer border border-border bg-muted"
               onClick={() => setSelectedImage(index)}
             >
               {/* Image Placeholder */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
-                  <ZoomIn className="w-8 h-8 mx-auto mb-2 text-muted-foreground opacity-50" />
-                  <p className="text-sm font-medium text-foreground">
+                  <ZoomIn className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
+                  <p className="text-sm font-medium text-muted-foreground">
                     {image.src}
                   </p>
-                  <p className="text-xs text-muted-foreground">400 × 300</p>
                 </div>
               </div>
 
               {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <p className="text-background font-medium">{image.alt}</p>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-12 h-12 rounded-full bg-background/20 backdrop-blur-sm flex items-center justify-center">
-                    <ZoomIn className="w-6 h-6 text-background" />
+              <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-10 h-10 mx-auto rounded-full bg-background/20 flex items-center justify-center mb-2">
+                    <ZoomIn className="w-5 h-5 text-background" />
                   </div>
+                  <p className="text-background text-sm font-medium">{image.alt}</p>
                 </div>
               </div>
             </motion.div>
@@ -90,41 +86,38 @@ export function Gallery() {
         >
           <DialogContent className="max-w-4xl p-0 bg-transparent border-0">
             <div className="relative">
-              {/* Close Button */}
               <button
                 onClick={() => setSelectedImage(null)}
                 className="absolute -top-12 right-0 p-2 text-background hover:text-primary transition-colors"
               >
-                <X className="w-8 h-8" />
+                <X className="w-6 h-6" />
               </button>
 
-              {/* Image */}
-              <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center">
+              <div className="aspect-[4/3] rounded-xl overflow-hidden bg-muted flex items-center justify-center border border-border">
                 {selectedImage !== null && (
-                  <div className="text-center text-background">
-                    <ZoomIn className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                    <p className="text-xl font-medium">
+                  <div className="text-center">
+                    <ZoomIn className="w-12 h-12 mx-auto mb-4 text-muted-foreground/30" />
+                    <p className="text-lg font-medium text-foreground">
                       {galleryImages[selectedImage].src}
                     </p>
-                    <p className="text-sm opacity-70">
+                    <p className="text-sm text-muted-foreground">
                       {galleryImages[selectedImage].alt}
                     </p>
                   </div>
                 )}
               </div>
 
-              {/* Navigation Arrows */}
               <button
                 onClick={() => navigateImage("prev")}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background/20 backdrop-blur-sm flex items-center justify-center hover:bg-background/40 transition-colors"
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/80 flex items-center justify-center hover:bg-background transition-colors"
               >
-                <ChevronLeft className="w-6 h-6 text-background" />
+                <ChevronLeft className="w-5 h-5 text-foreground" />
               </button>
               <button
                 onClick={() => navigateImage("next")}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background/20 backdrop-blur-sm flex items-center justify-center hover:bg-background/40 transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/80 flex items-center justify-center hover:bg-background transition-colors"
               >
-                <ChevronRight className="w-6 h-6 text-background" />
+                <ChevronRight className="w-5 h-5 text-foreground" />
               </button>
             </div>
           </DialogContent>
