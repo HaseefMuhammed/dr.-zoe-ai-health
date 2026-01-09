@@ -137,15 +137,16 @@ export function Hero() {
               style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "10%"]) }}
               className="relative rounded-2xl overflow-hidden bg-muted aspect-[4/3] border border-border"
             >
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Activity className="w-12 h-12 text-primary" />
-                  </div>
-                  <p className="text-lg font-medium text-foreground">hero-dr-zoe.png</p>
-                  <p className="text-sm text-muted-foreground">800 × 500</p>
-                </div>
-              </div>
+              {/* Image placeholder - just add your image to public/images/ */}
+              <img 
+                src="/images/hero-dr-zoe.png" 
+                alt="Dr. Zoe AI Doctor"
+                className="w-full h-full object-cover"
+              />
+              {/* REMOVE THIS: Preferred size 800×500 */}
+              <p className="absolute bottom-2 right-2 text-xs bg-black/50 text-white px-2 py-1 rounded">
+                800 × 500
+              </p>
             </motion.div>
 
             {/* Floating Cards with enhanced animation */}
