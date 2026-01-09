@@ -137,16 +137,12 @@ export function Hero() {
               style={{ y: useTransform(scrollYProgress, [0, 1], ["0%", "10%"]) }}
               className="relative rounded-2xl overflow-hidden bg-muted aspect-[4/3] border border-border"
             >
-              {/* Image placeholder - just add your image to public/images/ */}
+              {/* Recommended size: 800×500 */}
               <img 
                 src="/images/hero-dr-zoe.png" 
                 alt="Dr. Zoe AI Doctor"
                 className="w-full h-full object-cover"
               />
-              {/* REMOVE THIS: Preferred size 800×500 */}
-              <p className="absolute bottom-2 right-2 text-xs bg-black/50 text-white px-2 py-1 rounded">
-                800 × 500
-              </p>
             </motion.div>
 
             {/* Floating Cards with enhanced animation */}
