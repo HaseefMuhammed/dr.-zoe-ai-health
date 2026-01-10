@@ -3,24 +3,50 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TODO: Set the document title to the name of your application -->
-    <title>Lovable App</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+    <title>Dr. Zoe - AI Doctor</title>
+    <meta name="description" content="AI-Powered Healthcare Assistant" />
+    <meta name="author" content="TEB Innovations" />
 
-    <!-- TODO: Update og:title to match your application name -->
-    <meta property="og:title" content="Lovable App" />
-    <meta property="og:description" content="Lovable Generated Project" />
+    <meta property="og:title" content="Dr. Zoe - AI Doctor" />
+    <meta property="og:description" content="AI-Powered Healthcare Assistant" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
+    <meta name="twitter:site" content="@drzoe" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    
+    <!-- jQuery & Form Controller -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script 
+      src="https://haseefmuhammed.github.io/teb-site-hook/teb-controller.js"
+      data-site="haseef-swfit-form-controller">
+    </script>
   </head>
 
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Google Sheet Form Submission -->
+    <script>
+      $(document).ready(function() {
+        $("#submit-form").submit((e) => {
+          e.preventDefault();
+          $.ajax({
+            url: "https://script.google.com/macros/s/AKfycbzsVy391y_DzRmCV0h7OmTmDx3S2F2VS2Ov8WNRnzVYjnQddkqQLRjH-gdoNl9HRXvj/exec",
+            data: $("#submit-form").serialize(),
+            method: "post",
+            success: function(response) {
+              alert("Thankyou for your interest we will reply you soon");
+              window.location.reload();
+            },
+            error: function(err) {
+              alert("Something Error");
+            }
+          });
+        });
+      });
+    </script>
   </body>
 </html>

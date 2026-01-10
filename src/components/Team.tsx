@@ -1,13 +1,15 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
-import { Linkedin, Twitter, Github, User } from "lucide-react";
+import { useRef, useState } from "react";
+import { Linkedin, Twitter, Github } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const teamMembers = [
   {
     name: "Dr. Sarah Chen",
     role: "Project Lead",
     image: "team-lead.png",
+    // Recommended size: 250×250
     bio: "Healthcare innovation expert with 15+ years experience",
     social: { linkedin: "#", twitter: "#" },
   },
@@ -15,6 +17,7 @@ const teamMembers = [
     name: "Alex Rodriguez",
     role: "Lead Developer",
     image: "team-developer.png",
+    // Recommended size: 250×250
     bio: "Full-stack engineer specializing in AI/ML healthcare apps",
     social: { linkedin: "#", github: "#" },
   },
@@ -22,6 +25,7 @@ const teamMembers = [
     name: "Emily Watson",
     role: "UI/UX Designer",
     image: "team-designer.png",
+    // Recommended size: 250×250
     bio: "Award-winning designer focused on healthcare interfaces",
     social: { linkedin: "#", twitter: "#" },
   },
@@ -29,6 +33,7 @@ const teamMembers = [
     name: "Dr. Michael Park",
     role: "Research Consultant",
     image: "team-research.png",
+    // Recommended size: 250×250
     bio: "Medical research specialist ensuring clinical accuracy",
     social: { linkedin: "#", twitter: "#" },
   },
@@ -47,6 +52,32 @@ const cardVariants = {
     },
   }),
 };
+
+function TeamImage({ src, alt }: { src: string; alt: string }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <div className="relative aspect-square bg-muted flex items-center justify-center overflow-hidden">
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Skeleton className="w-full h-full absolute inset-0" />
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full"
+          />
+        </div>
+      )}
+      {/* Recommended size: 250×250 */}
+      <img 
+        src={`/images/${src}`}
+        alt={alt}
+        className={`w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={() => setIsLoaded(true)}
+      />
+    </div>
+  );
+}
 
 export function Team() {
   const ref = useRef(null);
@@ -87,18 +118,9 @@ export function Team() {
               className="group"
             >
               <div className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300">
-                {/* Image Placeholder */}
-                <div className="relative aspect-square bg-muted flex items-center justify-center overflow-hidden">
-                  <motion.div 
-                    className="text-center"
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="w-16 h-16 mx-auto mb-2 rounded-full bg-background flex items-center justify-center">
-                      <User className="w-8 h-8 text-muted-foreground" />
-                    </div>
-                    <p className="text-xs text-muted-foreground">{member.image}</p>
-                  </motion.div>
+                {/* Team Image */}
+                <div className="relative overflow-hidden">
+                  <TeamImage src={member.image} alt={member.name} />
 
                   {/* Social Links Overlay */}
                   <motion.div 

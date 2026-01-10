@@ -3,8 +3,10 @@ import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { ZoomIn, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const galleryImages = [
+  // Recommended size: 400×300
   { id: 1, src: "gallery-1.png", alt: "Dr. Zoe Kiosk Interface" },
   { id: 2, src: "gallery-2.png", alt: "Health Monitoring Dashboard" },
   { id: 3, src: "gallery-3.png", alt: "Tele-Doctor Consultation" },
@@ -12,6 +14,48 @@ const galleryImages = [
   { id: 5, src: "gallery-5.png", alt: "Mobile App Interface" },
   { id: 6, src: "gallery-6.png", alt: "Health Report Preview" },
 ];
+
+function GalleryImage({ src, alt, aspectClass, onClick }: { src: string; alt: string; aspectClass: string; onClick: () => void }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      className={`group relative rounded-xl overflow-hidden cursor-pointer border border-border bg-muted ${aspectClass}`}
+      onClick={onClick}
+    >
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Skeleton className="w-full h-full absolute inset-0" />
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full"
+          />
+        </div>
+      )}
+      {/* Recommended size: 400×300 */}
+      <img 
+        src={`/images/${src}`}
+        alt={alt}
+        className={`w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={() => setIsLoaded(true)}
+      />
+      <motion.div 
+        initial={{ opacity: 0 }}
+        whileHover={{ opacity: 1 }}
+        className="absolute inset-0 bg-foreground/60 flex items-center justify-center"
+      >
+        <div className="text-center">
+          <div className="w-10 h-10 mx-auto rounded-full bg-background/20 flex items-center justify-center mb-2">
+            <ZoomIn className="w-5 h-5 text-background" />
+          </div>
+          <p className="text-background text-sm font-medium">{alt}</p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 export function Gallery() {
   const ref = useRef(null);
@@ -64,30 +108,13 @@ export function Gallery() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ scale: 1.02 }}
-                className={`group relative rounded-xl overflow-hidden cursor-pointer border border-border bg-muted ${
-                  index === 0 ? "aspect-[4/5]" : "aspect-square"
-                }`}
-                onClick={() => setSelectedImage(galleryImages.indexOf(image))}
               >
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <ZoomIn className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
-                    <p className="text-sm font-medium text-muted-foreground">{image.src}</p>
-                  </div>
-                </div>
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                  className="absolute inset-0 bg-foreground/60 flex items-center justify-center"
-                >
-                  <div className="text-center">
-                    <div className="w-10 h-10 mx-auto rounded-full bg-background/20 flex items-center justify-center mb-2">
-                      <ZoomIn className="w-5 h-5 text-background" />
-                    </div>
-                    <p className="text-background text-sm font-medium">{image.alt}</p>
-                  </div>
-                </motion.div>
+                <GalleryImage 
+                  src={image.src} 
+                  alt={image.alt} 
+                  aspectClass={index === 0 ? "aspect-[4/5]" : "aspect-square"}
+                  onClick={() => setSelectedImage(galleryImages.indexOf(image))}
+                />
               </motion.div>
             ))}
           </motion.div>
@@ -100,30 +127,13 @@ export function Gallery() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                whileHover={{ scale: 1.02 }}
-                className={`group relative rounded-xl overflow-hidden cursor-pointer border border-border bg-muted ${
-                  index === 0 ? "aspect-square" : "aspect-[4/5]"
-                }`}
-                onClick={() => setSelectedImage(galleryImages.indexOf(image))}
               >
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <ZoomIn className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
-                    <p className="text-sm font-medium text-muted-foreground">{image.src}</p>
-                  </div>
-                </div>
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                  className="absolute inset-0 bg-foreground/60 flex items-center justify-center"
-                >
-                  <div className="text-center">
-                    <div className="w-10 h-10 mx-auto rounded-full bg-background/20 flex items-center justify-center mb-2">
-                      <ZoomIn className="w-5 h-5 text-background" />
-                    </div>
-                    <p className="text-background text-sm font-medium">{image.alt}</p>
-                  </div>
-                </motion.div>
+                <GalleryImage 
+                  src={image.src} 
+                  alt={image.alt} 
+                  aspectClass={index === 0 ? "aspect-square" : "aspect-[4/5]"}
+                  onClick={() => setSelectedImage(galleryImages.indexOf(image))}
+                />
               </motion.div>
             ))}
           </motion.div>
@@ -136,30 +146,13 @@ export function Gallery() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                whileHover={{ scale: 1.02 }}
-                className={`group relative rounded-xl overflow-hidden cursor-pointer border border-border bg-muted ${
-                  index === 0 ? "aspect-[4/5]" : "aspect-square"
-                }`}
-                onClick={() => setSelectedImage(galleryImages.indexOf(image))}
               >
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <ZoomIn className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
-                    <p className="text-sm font-medium text-muted-foreground">{image.src}</p>
-                  </div>
-                </div>
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                  className="absolute inset-0 bg-foreground/60 flex items-center justify-center"
-                >
-                  <div className="text-center">
-                    <div className="w-10 h-10 mx-auto rounded-full bg-background/20 flex items-center justify-center mb-2">
-                      <ZoomIn className="w-5 h-5 text-background" />
-                    </div>
-                    <p className="text-background text-sm font-medium">{image.alt}</p>
-                  </div>
-                </motion.div>
+                <GalleryImage 
+                  src={image.src} 
+                  alt={image.alt} 
+                  aspectClass={index === 0 ? "aspect-[4/5]" : "aspect-square"}
+                  onClick={() => setSelectedImage(galleryImages.indexOf(image))}
+                />
               </motion.div>
             ))}
           </motion.div>
@@ -186,15 +179,11 @@ export function Gallery() {
 
               <div className="aspect-[4/3] rounded-xl overflow-hidden bg-muted flex items-center justify-center border border-border">
                 {selectedImage !== null && (
-                  <div className="text-center">
-                    <ZoomIn className="w-12 h-12 mx-auto mb-4 text-muted-foreground/30" />
-                    <p className="text-lg font-medium text-foreground">
-                      {galleryImages[selectedImage].src}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {galleryImages[selectedImage].alt}
-                    </p>
-                  </div>
+                  <img 
+                    src={`/images/${galleryImages[selectedImage].src}`}
+                    alt={galleryImages[selectedImage].alt}
+                    className="w-full h-full object-cover"
+                  />
                 )}
               </div>
 
