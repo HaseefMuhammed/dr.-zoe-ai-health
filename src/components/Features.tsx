@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   Brain,
   Activity,
@@ -11,6 +11,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const features = [
   {
@@ -19,6 +20,7 @@ const features = [
     description:
       "Advanced AI algorithms analyze your symptoms and health data to provide accurate preliminary diagnoses.",
     image: "feature-ai-consult.png",
+    // Recommended size: 400×250
   },
   {
     icon: Activity,
@@ -26,6 +28,7 @@ const features = [
     description:
       "Integrated sensors automatically measure vital signs including blood pressure, heart rate, and more.",
     image: "feature-auto-measure.png",
+    // Recommended size: 400×250
   },
   {
     icon: Video,
@@ -33,6 +36,7 @@ const features = [
     description:
       "Connect instantly with certified healthcare professionals through secure video consultations.",
     image: "feature-video-call.png",
+    // Recommended size: 400×250
   },
   {
     icon: MessageSquare,
@@ -40,6 +44,7 @@ const features = [
     description:
       "24/7 AI-powered chatbot ready to answer your health questions and assist with appointments.",
     image: "feature-chatbot.png",
+    // Recommended size: 400×250
   },
   {
     icon: Ear,
@@ -47,6 +52,7 @@ const features = [
     description:
       "Comprehensive audiometry tests to assess your hearing health with professional-grade accuracy.",
     image: "feature-hearing.png",
+    // Recommended size: 400×250
   },
   {
     icon: Eye,
@@ -54,6 +60,7 @@ const features = [
     description:
       "Complete vision screening including visual acuity and color blindness assessments.",
     image: "feature-eye-test.png",
+    // Recommended size: 400×250
   },
 ];
 
@@ -69,6 +76,37 @@ const cardVariants = {
     },
   }),
 };
+
+function FeatureImage({ src, alt }: { src: string; alt: string }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <div className="relative h-40 bg-muted flex items-center justify-center overflow-hidden">
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Skeleton className="w-full h-full absolute inset-0" />
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full"
+          />
+        </div>
+      )}
+      {/* Recommended size: 400×250 */}
+      <img 
+        src={`/images/${src}`}
+        alt={alt}
+        className={`w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={() => setIsLoaded(true)}
+      />
+      
+      {/* Hover gradient overlay */}
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+      />
+    </div>
+  );
+}
 
 export function Features() {
   const ref = useRef(null);
@@ -137,24 +175,8 @@ export function Features() {
               className="group"
             >
               <div className="h-full bg-card border border-border rounded-xl overflow-hidden hover:border-primary/20 hover:shadow-lg transition-all duration-300">
-                {/* Feature Image Placeholder */}
-                <div className="relative h-40 bg-muted flex items-center justify-center overflow-hidden">
-                  <motion.div 
-                    className="text-center"
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <feature.icon className="w-10 h-10 mx-auto mb-2 text-muted-foreground/50" />
-                    <p className="text-xs text-muted-foreground">
-                      {feature.image}
-                    </p>
-                  </motion.div>
-                  
-                  {/* Hover gradient overlay */}
-                  <motion.div 
-                    className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  />
-                </div>
+                {/* Feature Image */}
+                <FeatureImage src={feature.image} alt={feature.title} />
 
                 {/* Feature Content */}
                 <div className="p-5">

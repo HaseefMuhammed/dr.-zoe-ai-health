@@ -12,7 +12,13 @@ import {
   Monitor,
   LogOut,
   CheckCircle,
-  Star
+  Star,
+  Settings,
+  Users,
+  BarChart3,
+  FileText,
+  Bell,
+  Database
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -37,6 +43,15 @@ const features = [
   "24/7 health chatbot support",
   "Comprehensive health reports",
   "Multi-language support"
+];
+
+const adminActions = [
+  { icon: Users, label: "Manage Users", href: "#" },
+  { icon: BarChart3, label: "Analytics", href: "#" },
+  { icon: FileText, label: "Reports", href: "#" },
+  { icon: Bell, label: "Notifications", href: "#" },
+  { icon: Database, label: "Database", href: "#" },
+  { icon: Settings, label: "Settings", href: "#" },
 ];
 
 const DownloadPage = () => {
@@ -86,11 +101,39 @@ const DownloadPage = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
-          {/* App Header */}
+          {/* Admin Quick Actions */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
+            className="mb-12"
+          >
+            <h2 className="text-xl font-bold text-foreground mb-4">Admin Panel</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              {adminActions.map((action, index) => (
+                <motion.a
+                  key={action.label}
+                  href={action.href}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                  className="flex flex-col items-center gap-2 p-4 bg-card border border-border rounded-xl hover:border-primary/30 hover:shadow-md transition-all"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <action.icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <span className="text-sm font-medium text-foreground">{action.label}</span>
+                </motion.a>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* App Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             className="flex flex-col md:flex-row gap-8 items-start mb-12"
           >
             {/* App Icon */}
@@ -143,7 +186,7 @@ const DownloadPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
             className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12"
           >
             <div className="bg-card border border-border rounded-xl p-5">
@@ -199,7 +242,7 @@ const DownloadPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             className="bg-card border border-border rounded-2xl p-8"
           >
             <h2 className="text-xl font-bold text-foreground mb-6">What's Included</h2>
@@ -209,7 +252,7 @@ const DownloadPage = () => {
                   key={feature}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + index * 0.1 }}
+                  transition={{ delay: 0.4 + index * 0.1 }}
                   className="flex items-center gap-3"
                 >
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">

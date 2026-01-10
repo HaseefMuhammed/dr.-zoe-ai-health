@@ -1,7 +1,8 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Brain, Cpu, Video, Accessibility, CheckCircle2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const highlights = [
   {
@@ -39,6 +40,35 @@ const staggerContainer = {
   },
 };
 
+function AboutImage({ imageY }: { imageY: any }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <motion.div 
+      style={{ y: imageY }}
+      className="relative rounded-2xl overflow-hidden bg-muted aspect-[4/3] border border-border"
+    >
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Skeleton className="w-full h-full absolute inset-0" />
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full"
+          />
+        </div>
+      )}
+      {/* Recommended size: 600×400 */}
+      <img 
+        src="/images/about-dr-zoe.png" 
+        alt="About Dr. Zoe"
+        className={`w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={() => setIsLoaded(true)}
+      />
+    </motion.div>
+  );
+}
+
 export function About() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -62,24 +92,7 @@ export function About() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="relative"
           >
-            <motion.div 
-              style={{ y: imageY }}
-              className="relative rounded-2xl overflow-hidden bg-muted aspect-[4/3] border border-border"
-            >
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <motion.div 
-                    animate={{ rotate: [0, 5, -5, 0] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    className="w-20 h-20 mx-auto mb-4 rounded-full bg-secondary/10 flex items-center justify-center"
-                  >
-                    <Brain className="w-10 h-10 text-secondary" />
-                  </motion.div>
-                  <p className="text-lg font-medium text-foreground">about-dr-zoe.png</p>
-                  <p className="text-sm text-muted-foreground">600 × 400</p>
-                </div>
-              </div>
-            </motion.div>
+            <AboutImage imageY={imageY} />
 
             {/* Decorative floating element */}
             <motion.div

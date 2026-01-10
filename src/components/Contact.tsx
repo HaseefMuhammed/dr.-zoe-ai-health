@@ -5,7 +5,6 @@ import { MapPin, Phone, Mail, Send, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
 
 const contactInfo = [
   {
@@ -28,7 +27,6 @@ const contactInfo = [
 export function Contact() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const { toast } = useToast();
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const containerRef = useRef(null);
@@ -38,16 +36,6 @@ export function Contact() {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], ["5%", "-5%"]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitted(true);
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for contacting us. We'll get back to you soon.",
-    });
-    setTimeout(() => setIsSubmitted(false), 3000);
-  };
 
   return (
     <section id="contact" className="section-padding bg-muted/30 overflow-hidden" ref={containerRef}>
@@ -101,21 +89,26 @@ export function Contact() {
               </motion.div>
             ))}
 
-            {/* Map Placeholder */}
+            {/* Decorative Design Element */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={isInView ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="aspect-video rounded-xl overflow-hidden bg-muted flex items-center justify-center border border-border"
+              className="relative rounded-xl overflow-hidden bg-gradient-to-br from-primary/10 via-secondary/10 to-primary/5 p-8 border border-border"
             >
-              <motion.div 
-                className="text-center"
-                animate={{ y: [0, -5, 0] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                <MapPin className="w-10 h-10 mx-auto mb-2 text-muted-foreground/30" />
-                <p className="text-sm text-muted-foreground">Map placeholder</p>
-              </motion.div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-secondary/10 rounded-full blur-2xl" />
+              <div className="relative text-center">
+                <motion.div
+                  animate={{ y: [0, -5, 0] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center"
+                >
+                  <Mail className="w-8 h-8 text-primary" />
+                </motion.div>
+                <h3 className="font-semibold text-foreground mb-2">24/7 Support</h3>
+                <p className="text-sm text-muted-foreground">We're always here to help you with any questions</p>
+              </div>
             </motion.div>
           </motion.div>
 
@@ -126,7 +119,7 @@ export function Contact() {
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <motion.form
-              onSubmit={handleSubmit}
+              id="submit-form"
               className="bg-card border border-border rounded-xl p-6"
               whileHover={{ boxShadow: "0 10px 40px -10px rgba(0,0,0,0.1)" }}
             >
@@ -142,6 +135,7 @@ export function Contact() {
                     </label>
                     <Input
                       type="text"
+                      name="Name"
                       placeholder="John Doe"
                       className="bg-background"
                       required
@@ -157,6 +151,7 @@ export function Contact() {
                     </label>
                     <Input
                       type="email"
+                      name="Email"
                       placeholder="john@example.com"
                       className="bg-background"
                       required
@@ -174,6 +169,7 @@ export function Contact() {
                   </label>
                   <Input
                     type="text"
+                    name="Subject"
                     placeholder="How can we help?"
                     className="bg-background"
                     required
@@ -189,6 +185,7 @@ export function Contact() {
                     Message
                   </label>
                   <Textarea
+                    name="Message"
                     placeholder="Tell us more..."
                     className="bg-background min-h-[120px]"
                     required
